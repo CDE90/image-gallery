@@ -96,3 +96,13 @@ Adding a video to the gallery is similar to adding an image, but with a few extr
 9. Click the green "Commit changes" button.
 
 That's it! Your new video is now part of the art gallery. 🎥🖼️
+
+# Deploying Changes
+
+Changes will be deployed automatically when they are added to the `main` branch.
+
+To initially set up deployment, we need to make a copy of this repository and make it private. Then log into cloudflare and set up the repository in cloudflare pages.
+
+Leave Framework preset as "None" and set the build command to "rm -rf ./videos" so that the large videos are not added to CF (videos over 25mb cannot be deployed to cloudflare so we just use a direct Github link instead). You should not need to change any other settings from their defaults.
+
+In the index.html file, you will need to update the link to the repository if you made a copy. The current link is: https://raw.githubusercontent.com/CDE90/image-gallery/main and you should replace the CDE90/image-gallery with your username/repository name.
