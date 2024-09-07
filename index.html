@@ -32,7 +32,6 @@
                 border-radius: 10px 10px 0 0;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease;
-                cursor: pointer;
             }
             .gallery figcaption {
                 background-color: #f8f8f8;
@@ -40,11 +39,16 @@
                 text-align: center;
                 border-radius: 0 0 10px 10px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
             }
             .gallery figure {
                 margin: 0;
                 width: calc((100% - 20px) * var(--image-size-multiplier));
                 max-width: calc(500px * var(--image-size-multiplier));
+                cursor: pointer;
             }
             .gallery figure:hover {
                 transform: scale(1.05);
@@ -155,17 +159,18 @@
             <figure>
                 <img src="/images/2.jpg" alt="Artwork 2" loading="lazy" />
                 <figcaption>
-                    Description of Artwork 2 which actually is a long
-                    description of the artwork and then it keeps on going
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    because we need to test how it responds with long
-                    descriptions
+                    Really long description of Artwork 2 which actually is a
+                    long description of the artwork and then it keeps on going
+                    because we need to test how it responds. Lorem ipsum dolor
+                    sit amet consectetur adipisicing elit. Quisquam, quos. Lorem
+                    ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+                    quos. Lorem ipsum dolor sit amet consectetur adipisicing
+                    elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet
+                    consectetur adipisicing elit. Quisquam, quos. Lorem ipsum
+                    dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Quisquam, quos.
                 </figcaption>
             </figure>
             <figure>
@@ -221,8 +226,8 @@
                 const modalCaption = document.getElementById("modalCaption");
                 modal.style.display = "block";
                 modalImg.src = imgElement.src;
-                modalCaption.innerHTML =
-                    imgElement.nextElementSibling.innerHTML;
+                modalCaption.textContent =
+                    imgElement.getAttribute("data-full-caption");
             }
 
             // Function to close modal
@@ -257,15 +262,13 @@
             document.addEventListener("DOMContentLoaded", function () {
                 const modal = document.getElementById("imageModal");
                 const closeBtn = document.getElementsByClassName("close")[0];
-                const images = document.querySelectorAll(".gallery img");
-
-                // Add click event to each image
-                images.forEach((img) => {
-                    img.onclick = function () {
-                        // Update URL with image filename
-                        const filename = this.src.split("/").pop();
+                const imgFigures = document.querySelectorAll(".gallery figure");
+                imgFigures.forEach((figure) => {
+                    const img = figure.querySelector("img");
+                    figure.onclick = function () {
+                        const filename = img.src.split("/").pop();
                         window.location.hash = encodeURIComponent(filename);
-                        openModal(this);
+                        openModal(img);
                     };
                 });
 
@@ -300,6 +303,22 @@
 
                 // Initial setup
                 sizeSlider.oninput();
+
+                const figures = document.querySelectorAll(".gallery figure");
+                figures.forEach((figure) => {
+                    const img = figure.querySelector("img");
+                    const caption = figure.querySelector("figcaption");
+                    const fullCaption = caption.textContent;
+
+                    // Truncate caption if it's longer than 75 characters
+                    if (fullCaption.length > 75) {
+                        caption.textContent =
+                            fullCaption.substring(0, 75) + "...";
+                    }
+
+                    // Store full caption in data attribute
+                    img.setAttribute("data-full-caption", fullCaption);
+                });
             });
         </script>
     </body>
