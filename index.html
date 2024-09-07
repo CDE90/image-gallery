@@ -226,8 +226,10 @@
                 const modalCaption = document.getElementById("modalCaption");
                 modal.style.display = "block";
                 modalImg.src = imgElement.src;
+
+                // Get the full caption from the data attribute
                 modalCaption.textContent =
-                    imgElement.getAttribute("data-full-caption");
+                    imgElement.getAttribute("data-full-caption") || "";
             }
 
             // Function to close modal
@@ -310,15 +312,18 @@
                     const caption = figure.querySelector("figcaption");
                     const fullCaption = caption.textContent;
 
+                    // Store the full caption in a data attribute on the image
+                    img.setAttribute("data-full-caption", fullCaption);
+
                     // Truncate caption if it's longer than 75 characters
                     if (fullCaption.length > 75) {
                         caption.textContent =
                             fullCaption.substring(0, 75) + "...";
                     }
-
-                    // Store full caption in data attribute
-                    img.setAttribute("data-full-caption", fullCaption);
                 });
+
+                // Move handleHashChange() call to the end of DOMContentLoaded
+                handleHashChange();
             });
         </script>
     </body>
