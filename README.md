@@ -101,7 +101,7 @@ That's it! Your new video is now part of the art gallery. 🎥🖼️
 
 Changes will be deployed automatically when they are added to the `main` branch.
 
-To initially set up deployment, we need to make a copy of this repository and make it private. Then log into cloudflare and set up the repository in cloudflare pages.
+To initially set up deployment, we need to make a copy of this repository. Then log into cloudflare and set up the repository in cloudflare pages.
 
 Leave Framework preset as "None" and set the build command to "rm -rf ./videos" so that the large videos are not added to CF (videos over 25mb cannot be deployed to cloudflare so we just use a direct Github link instead). You should not need to change any other settings from their defaults.
 
