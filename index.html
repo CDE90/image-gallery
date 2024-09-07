@@ -25,38 +25,47 @@
                 gap: calc(20px * var(--image-size-multiplier));
             }
             .gallery img {
-                width: calc((100% - 20px) * var(--image-size-multiplier));
-                max-width: calc(500px * var(--image-size-multiplier));
+                width: 100%;
                 height: auto;
                 aspect-ratio: 1 / 1;
                 object-fit: cover;
-                border-radius: 10px;
+                border-radius: 10px 10px 0 0;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease;
                 cursor: pointer;
             }
-            .gallery img:hover {
+            .gallery figcaption {
+                background-color: #f8f8f8;
+                padding: 10px;
+                text-align: center;
+                border-radius: 0 0 10px 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .gallery figure {
+                margin: 0;
+                width: calc((100% - 20px) * var(--image-size-multiplier));
+                max-width: calc(500px * var(--image-size-multiplier));
+            }
+            .gallery figure:hover {
                 transform: scale(1.05);
             }
-
             @media screen and (min-width: 600px) {
-                .gallery img {
+                .gallery figure {
                     width: calc((50% - 20px) * var(--image-size-multiplier));
                 }
             }
 
             @media screen and (min-width: 900px) {
-                .gallery img {
+                .gallery figure {
                     width: calc((33.33% - 20px) * var(--image-size-multiplier));
                 }
             }
 
             @media screen and (min-width: 1200px) {
-                .gallery img {
+                .gallery figure {
                     width: calc((25% - 20px) * var(--image-size-multiplier));
                 }
             }
-
             /* Add these new styles for the modal */
             .modal {
                 display: none;
@@ -67,25 +76,26 @@
                 width: 100%;
                 height: 100%;
                 background-color: rgba(0, 0, 0, 0.9);
+                overflow-y: auto; /* Allow scrolling if content is too long */
             }
             .modal-content {
-                margin: auto;
+                margin: 20px auto 10px; /* Reduced top margin from 60px to 30px */
                 display: block;
                 max-width: 90%;
-                max-height: 90%;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+                max-height: calc(
+                    100% - 90px
+                ); /* Adjusted to account for reduced top margin */
+                object-fit: contain; /* Ensure the entire image is visible */
             }
             .close {
-                position: absolute;
+                position: fixed; /* Change to fixed positioning */
                 top: 15px;
                 right: 35px;
                 color: #f1f1f1;
                 font-size: 40px;
                 font-weight: bold;
                 cursor: pointer;
+                z-index: 1001; /* Ensure it's above the image */
             }
 
             /* Add styles for the slider */
@@ -107,6 +117,17 @@
                 text-align: left;
                 margin-left: 10px;
             }
+            /* Update modal styles */
+            #modalCaption {
+                margin: 10px auto;
+                display: block;
+                width: 80%;
+                max-width: 700px;
+                text-align: center;
+                color: #ccc;
+                padding: 10px 0;
+                /* height: 150px; */
+            }
         </style>
     </head>
     <body>
@@ -127,32 +148,81 @@
         </div>
 
         <div class="gallery">
-            <img src="/images/1.jpg" alt="Artwork 1" loading="lazy" />
-            <img src="/images/2.jpg" alt="Artwork 2" loading="lazy" />
-            <img src="/images/3.jpg" alt="Artwork 3" loading="lazy" />
-            <img src="/images/4.jpg" alt="Artwork 4" loading="lazy" />
-            <img src="/images/5.jpg" alt="Artwork 5" loading="lazy" />
-            <img src="/images/6.jpg" alt="Artwork 6" loading="lazy" />
-            <img src="/images/7.jpg" alt="Artwork 7" loading="lazy" />
-            <img src="/images/8.jpg" alt="Artwork 8" loading="lazy" />
-            <img src="/images/9.jpg" alt="Artwork 9" loading="lazy" />
-            <img src="/images/10.jpg" alt="Artwork 10" loading="lazy" />
-            <img src="/images/11.jpg" alt="Artwork 11" loading="lazy" />
+            <figure>
+                <img src="/images/1.jpg" alt="Artwork 1" loading="lazy" />
+                <figcaption>Description of Artwork 1</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/2.jpg" alt="Artwork 2" loading="lazy" />
+                <figcaption>
+                    Description of Artwork 2 which actually is a long
+                    description of the artwork and then it keeps on going
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    because we need to test how it responds with long
+                    descriptions
+                </figcaption>
+            </figure>
+            <figure>
+                <img src="/images/3.jpg" alt="Artwork 3" loading="lazy" />
+                <figcaption>Description of Artwork 3</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/4.jpg" alt="Artwork 4" loading="lazy" />
+                <figcaption>Description of Artwork 4</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/5.jpg" alt="Artwork 5" loading="lazy" />
+                <figcaption>Description of Artwork 5</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/6.jpg" alt="Artwork 6" loading="lazy" />
+                <figcaption>Description of Artwork 6</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/7.jpg" alt="Artwork 7" loading="lazy" />
+                <figcaption>Description of Artwork 7</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/8.jpg" alt="Artwork 8" loading="lazy" />
+                <figcaption>Description of Artwork 8</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/9.jpg" alt="Artwork 9" loading="lazy" />
+                <figcaption>Description of Artwork 9</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/10.jpg" alt="Artwork 10" loading="lazy" />
+                <figcaption>Description of Artwork 10</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/11.jpg" alt="Artwork 11" loading="lazy" />
+                <figcaption>Description of Artwork 11</figcaption>
+            </figure>
         </div>
 
         <!-- Add this modal container -->
         <div id="imageModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="modalImage" />
+            <div id="modalCaption"></div>
         </div>
 
         <script>
             // Function to open modal with specific image
-            function openModal(imgSrc) {
+            function openModal(imgElement) {
                 const modal = document.getElementById("imageModal");
                 const modalImg = document.getElementById("modalImage");
+                const modalCaption = document.getElementById("modalCaption");
                 modal.style.display = "block";
-                modalImg.src = imgSrc;
+                modalImg.src = imgElement.src;
+                modalCaption.innerHTML =
+                    imgElement.nextElementSibling.innerHTML;
             }
 
             // Function to close modal
@@ -172,7 +242,12 @@
                 const hash = window.location.hash;
                 if (hash) {
                     const imgSrc = decodeURIComponent(hash.slice(1)); // Remove the # and decode
-                    openModal(imgSrc);
+                    const imgElement = document.querySelector(
+                        `img[src$="${imgSrc}"]`
+                    );
+                    if (imgElement) {
+                        openModal(imgElement);
+                    }
                 } else {
                     closeModal();
                 }
@@ -187,8 +262,10 @@
                 // Add click event to each image
                 images.forEach((img) => {
                     img.onclick = function () {
-                        // Update URL with image source
-                        window.location.hash = encodeURIComponent(this.src);
+                        // Update URL with image filename
+                        const filename = this.src.split("/").pop();
+                        window.location.hash = encodeURIComponent(filename);
+                        openModal(this);
                     };
                 });
 
