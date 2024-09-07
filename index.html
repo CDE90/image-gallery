@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Art Gallery</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f0f0f0;
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+            .gallery {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            .gallery img {
+                width: calc(100% - 20px);
+                max-width: 500px;
+                height: auto;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+                cursor: pointer; /* Add this line */
+            }
+            .gallery img:hover {
+                transform: scale(1.05);
+            }
+
+            @media screen and (min-width: 600px) {
+                .gallery img {
+                    width: calc(50% - 20px);
+                }
+            }
+
+            @media screen and (min-width: 900px) {
+                .gallery img {
+                    width: calc(33.33% - 20px);
+                }
+            }
+
+            @media screen and (min-width: 1200px) {
+                .gallery img {
+                    width: calc(25% - 20px);
+                }
+            }
+
+            /* Add these new styles for the modal */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+            }
+            .modal-content {
+                margin: auto;
+                display: block;
+                max-width: 90%;
+                max-height: 90%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .close {
+                position: absolute;
+                top: 15px;
+                right: 35px;
+                color: #f1f1f1;
+                font-size: 40px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>My Art Gallery</h1>
+        <div class="gallery">
+            <img src="/images/1.jpg" alt="Artwork 1" />
+            <img src="/images/2.jpg" alt="Artwork 2" />
+            <img src="/images/3.jpg" alt="Artwork 3" />
+            <img src="/images/4.jpg" alt="Artwork 4" />
+            <img src="/images/5.jpg" alt="Artwork 5" />
+            <img src="/images/6.jpg" alt="Artwork 6" />
+            <img src="/images/7.jpg" alt="Artwork 7" />
+            <img src="/images/8.jpg" alt="Artwork 8" />
+            <img src="/images/9.jpg" alt="Artwork 9" />
+            <img src="/images/10.jpg" alt="Artwork 10" />
+            <img src="/images/11.jpg" alt="Artwork 11" />
+        </div>
+
+        <!-- Add this modal container -->
+        <div id="imageModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage" />
+        </div>
+
+        <script>
+            // Get the modal
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const closeBtn = document.getElementsByClassName("close")[0];
+
+            // Get all images in the gallery
+            const images = document.querySelectorAll(".gallery img");
+
+            // Add click event to each image
+            images.forEach((img) => {
+                img.onclick = function () {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                };
+            });
+
+            // Close the modal when clicking the close button
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            // Close the modal when clicking outside the image
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+        </script>
+    </body>
+</html>
