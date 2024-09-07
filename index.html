@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My Art Gallery</title>
         <style>
+            :root {
+                --image-size-multiplier: 1;
+            }
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -19,18 +22,18 @@
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 20px;
+                gap: calc(20px * var(--image-size-multiplier));
             }
             .gallery img {
-                width: calc(100% - 20px);
-                max-width: 500px;
+                width: calc((100% - 20px) * var(--image-size-multiplier));
+                max-width: calc(500px * var(--image-size-multiplier));
                 height: auto;
                 aspect-ratio: 1 / 1;
                 object-fit: cover;
                 border-radius: 10px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease;
-                cursor: pointer; /* Add this line */
+                cursor: pointer;
             }
             .gallery img:hover {
                 transform: scale(1.05);
@@ -38,19 +41,19 @@
 
             @media screen and (min-width: 600px) {
                 .gallery img {
-                    width: calc(50% - 20px);
+                    width: calc((50% - 20px) * var(--image-size-multiplier));
                 }
             }
 
             @media screen and (min-width: 900px) {
                 .gallery img {
-                    width: calc(33.33% - 20px);
+                    width: calc((33.33% - 20px) * var(--image-size-multiplier));
                 }
             }
 
             @media screen and (min-width: 1200px) {
                 .gallery img {
-                    width: calc(25% - 20px);
+                    width: calc((25% - 20px) * var(--image-size-multiplier));
                 }
             }
 
@@ -84,10 +87,45 @@
                 font-weight: bold;
                 cursor: pointer;
             }
+
+            /* Add styles for the slider */
+            .slider-container {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .slider-container label {
+                margin-right: 10px;
+                font-weight: bold;
+            }
+            #sizeSlider {
+                width: 200px;
+                vertical-align: middle;
+            }
+            #sizeValue {
+                display: inline-block;
+                width: 50px;
+                text-align: left;
+                margin-left: 10px;
+            }
         </style>
     </head>
     <body>
         <h1>My Art Gallery</h1>
+
+        <!-- Updated slider container -->
+        <div class="slider-container">
+            <label for="sizeSlider">Image Scale: </label>
+            <input
+                type="range"
+                id="sizeSlider"
+                min="50"
+                max="200"
+                value="100"
+                step="10"
+            />
+            <span id="sizeValue">100%</span>
+        </div>
+
         <div class="gallery">
             <img src="/images/1.jpg" alt="Artwork 1" />
             <img src="/images/2.jpg" alt="Artwork 2" />
@@ -136,6 +174,22 @@
                     modal.style.display = "none";
                 }
             };
+
+            // Updated slider functionality
+            const sizeSlider = document.getElementById("sizeSlider");
+            const sizeValue = document.getElementById("sizeValue");
+
+            sizeSlider.oninput = function () {
+                const multiplier = this.value / 100;
+                sizeValue.textContent = this.value + "%";
+                document.documentElement.style.setProperty(
+                    "--image-size-multiplier",
+                    multiplier
+                );
+            };
+
+            // Initial setup
+            sizeSlider.oninput();
         </script>
     </body>
 </html>
