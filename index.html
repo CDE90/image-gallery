@@ -24,7 +24,16 @@
                 justify-content: center;
                 gap: calc(20px * var(--image-size-multiplier));
             }
-            .gallery img {
+            .gallery figure {
+                margin: 0;
+                width: calc((100% - 20px) * var(--image-size-multiplier));
+                max-width: calc(500px * var(--image-size-multiplier));
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+            }
+            .gallery img,
+            .video-figure .video-thumbnail {
                 width: 100%;
                 height: auto;
                 aspect-ratio: 1 / 1;
@@ -43,12 +52,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 100%;
-            }
-            .gallery figure {
-                margin: 0;
-                width: calc((100% - 20px) * var(--image-size-multiplier));
-                max-width: calc(500px * var(--image-size-multiplier));
-                cursor: pointer;
+                margin-top: 5px;
             }
             .gallery figure:hover {
                 transform: scale(1.05);
@@ -132,6 +136,40 @@
                 padding: 10px 0;
                 /* height: 150px; */
             }
+
+            .video-figure .video-thumbnail {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-bottom: 100%;
+                overflow: hidden;
+            }
+
+            .video-figure .video-thumbnail img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .video-figure .play-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 48px;
+                color: white;
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                width: 80px;
+                height: 80px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -152,6 +190,30 @@
         </div>
 
         <div class="gallery">
+            <!-- Updated video figure with data-video-src attribute -->
+            <figure class="video-figure">
+                <div class="video-thumbnail" data-video-src="/videos/1.mp4">
+                    <img
+                        src="/images/video-thumbnail-1.png"
+                        alt="Video 1"
+                        loading="lazy"
+                    />
+                    <div class="play-icon">▶</div>
+                </div>
+                <figcaption>Description of Video 1</figcaption>
+            </figure>
+            <figure class="video-figure">
+                <div class="video-thumbnail" data-video-src="/videos/2.mp4">
+                    <img
+                        src="/images/video-thumbnail-2.png"
+                        alt="Video 2"
+                        loading="lazy"
+                    />
+                    <div class="play-icon">▶</div>
+                </div>
+                <figcaption>Description of Video 2</figcaption>
+            </figure>
+
             <figure>
                 <img src="/images/1.jpg" alt="Artwork 1" loading="lazy" />
                 <figcaption>Description of Artwork 1</figcaption>
@@ -211,25 +273,44 @@
             </figure>
         </div>
 
-        <!-- Add this modal container -->
+        <!-- Update the modal container -->
         <div id="imageModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="modalImage" />
+            <video
+                class="modal-content"
+                id="modalVideo"
+                controls
+                style="display: none"
+            >
+                <source src="" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
             <div id="modalCaption"></div>
         </div>
 
         <script>
-            // Function to open modal with specific image
-            function openModal(imgElement) {
+            // Update the openModal function
+            function openModal(element) {
                 const modal = document.getElementById("imageModal");
                 const modalImg = document.getElementById("modalImage");
+                const modalVideo = document.getElementById("modalVideo");
                 const modalCaption = document.getElementById("modalCaption");
                 modal.style.display = "block";
-                modalImg.src = imgElement.src;
 
-                // Get the full caption from the data attribute
-                modalCaption.textContent =
-                    imgElement.getAttribute("data-full-caption") || "";
+                if (element.tagName === "IMG") {
+                    modalImg.style.display = "block";
+                    modalVideo.style.display = "none";
+                    modalImg.src = element.src;
+                    modalCaption.textContent =
+                        element.getAttribute("data-full-caption") || "";
+                } else if (element.classList.contains("video-thumbnail")) {
+                    modalImg.style.display = "none";
+                    modalVideo.style.display = "block";
+                    modalVideo.src = element.getAttribute("data-video-src");
+                    modalCaption.textContent =
+                        element.nextElementSibling.textContent;
+                }
             }
 
             // Function to close modal
@@ -248,12 +329,22 @@
             function handleHashChange() {
                 const hash = window.location.hash;
                 if (hash) {
-                    const imgSrc = decodeURIComponent(hash.slice(1)); // Remove the # and decode
-                    const imgElement = document.querySelector(
-                        `img[src$="${imgSrc}"]`
-                    );
-                    if (imgElement) {
-                        openModal(imgElement);
+                    const content = decodeURIComponent(hash.slice(1));
+                    if (content.startsWith("video:")) {
+                        const videoFilename = content.slice(6); // Remove "video:" prefix
+                        const videoThumbnail = document.querySelector(
+                            `.video-thumbnail[data-video-src$="${videoFilename}"]`
+                        );
+                        if (videoThumbnail) {
+                            openModal(videoThumbnail);
+                        }
+                    } else {
+                        const imgElement = document.querySelector(
+                            `img[src$="${content}"]`
+                        );
+                        if (imgElement) {
+                            openModal(imgElement);
+                        }
                     }
                 } else {
                     closeModal();
@@ -264,13 +355,29 @@
             document.addEventListener("DOMContentLoaded", function () {
                 const modal = document.getElementById("imageModal");
                 const closeBtn = document.getElementsByClassName("close")[0];
-                const imgFigures = document.querySelectorAll(".gallery figure");
+                const imgFigures = document.querySelectorAll(
+                    ".gallery figure:not(.video-figure)"
+                );
                 imgFigures.forEach((figure) => {
                     const img = figure.querySelector("img");
                     figure.onclick = function () {
                         const filename = img.src.split("/").pop();
                         window.location.hash = encodeURIComponent(filename);
                         openModal(img);
+                    };
+                });
+
+                // Update this section to handle multiple video figures
+                const videoFigures = document.querySelectorAll(".video-figure");
+                videoFigures.forEach((videoFigure) => {
+                    const videoThumbnail =
+                        videoFigure.querySelector(".video-thumbnail");
+                    videoThumbnail.onclick = function () {
+                        const videoSrc = this.getAttribute("data-video-src");
+                        const filename = videoSrc.split("/").pop();
+                        window.location.hash =
+                            "video:" + encodeURIComponent(filename);
+                        openModal(videoThumbnail);
                     };
                 });
 
